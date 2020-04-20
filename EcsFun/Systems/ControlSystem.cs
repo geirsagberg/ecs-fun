@@ -30,7 +30,8 @@ namespace EcsFun.Systems
         private Grid grid;
         private bool skipNextMouseClicked;
         private CheckBox isPhysicalCheckBox;
-        private ComponentMapper<EntityInfo> infoMapper;
+        private ComponentMapper<EntityInfo> infoMapper = null!;
+        private ComponentMapper<Physical> physicalMapper = null!;
 
         public ControlSystem(SharedState sharedState, MouseListener mouseListener,
             Random random, GraphicsDeviceManager graphics, Sprites sprites) : base(Aspect.All(typeof(Transform2),
@@ -169,7 +170,7 @@ namespace EcsFun.Systems
             transformMapper = mapperService.GetMapper<Transform2>();
             playerMapper = mapperService.GetMapper<Player>();
             infoMapper = mapperService.GetMapper<EntityInfo>();
-
+            physicalMapper = mapperService.GetMapper<Physical>();
 
             sharedState.SelectedEntityChanged += OnSelectedEntityChanged;
 
@@ -182,7 +183,7 @@ namespace EcsFun.Systems
                 grid.Visible = false;
             } else {
                 isPlayerCheckBox.IsPressed = playerMapper.Has(selectedentity.Value);
-                isPhysicalCheckBox.IsPressed = playerMapper.Has(selectedentity.Value);
+                isPhysicalCheckBox.IsPressed = physicalMapper.Has(selectedentity.Value);
                 grid.Visible = true;
             }
         }
