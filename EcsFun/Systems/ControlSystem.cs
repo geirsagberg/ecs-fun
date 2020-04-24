@@ -47,7 +47,10 @@ namespace EcsFun.Systems
         private void SetupGui()
         {
             var button = new TextButton {
-                GridColumn = 0, GridRow = 0, Text = "Create entity", Padding = new Thickness(8)
+                GridColumn = 0,
+                GridRow = 0,
+                Text = "Create entity",
+                Padding = new Thickness(8)
             };
             button.Click += delegate {
                 sharedState.OnCreateEntity(random.Next(100, graphics.PreferredBackBufferWidth - 100),
@@ -72,7 +75,7 @@ namespace EcsFun.Systems
             });
             isPlayerCheckBox = new CheckBox {
                 GridRow = 0,
-                GridColumn = 1
+                GridColumn = 1,
             };
             isPlayerCheckBox.Click += (sender, args) => {
                 if (sender is CheckBox checkBox)
