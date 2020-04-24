@@ -15,17 +15,15 @@ namespace EcsFun
     {
         private readonly GraphicsDeviceManager graphics;
         private SpriteBatch? spriteBatch;
-        private RenderSystem? renderSystem;
         private World? world;
-        private SpawnSystem? spawnSystem;
         private readonly Random random;
-        private MouseListener mouseListener;
-        private ControlSystem controlSystem;
-        private SharedState sharedState;
+        private MouseListener mouseListener = new MouseListener();
+        private SharedState sharedState = new SharedState();
 
         public EcsGame()
         {
-            graphics = new GraphicsDeviceManager(this) {
+            graphics = new GraphicsDeviceManager(this)
+            {
                 PreferredBackBufferWidth = 1280,
                 PreferredBackBufferHeight = 800
             };
@@ -33,7 +31,8 @@ namespace EcsFun
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
             random = new Random();
-            Window.ClientSizeChanged += (sender, args) => {
+            Window.ClientSizeChanged += (sender, args) =>
+            {
                 graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
                 graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
                 graphics.ApplyChanges();
@@ -42,7 +41,6 @@ namespace EcsFun
 
         protected override void Initialize()
         {
-            mouseListener = new MouseListener();
             Components.Add(new InputListenerComponent(this, mouseListener));
 
             base.Initialize();
@@ -54,14 +52,12 @@ namespace EcsFun
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            sharedState = new SharedState();
-
             var sprites = new Sprites(new Sprite(Content.Load<Texture2D>("anki")),
                 new Sprite(Content.Load<Texture2D>("bronch")));
 
-            spawnSystem = new SpawnSystem(sharedState);
-            renderSystem = new RenderSystem(sharedState, spriteBatch, sprites);
-            controlSystem = new ControlSystem(sharedState, mouseListener, random, graphics, sprites);
+            var spawnSystem = new SpawnSystem(sharedState);
+            var renderSystem = new RenderSystem(sharedState, spriteBatch, sprites);
+            var controlSystem = new ControlSystem(sharedState, mouseListener, random, graphics, sprites);
             var playerSystem = new PlayerSystem();
             var physicsSystem = new PhysicsSystem(graphics);
 
