@@ -32,6 +32,7 @@ namespace EcsFun.Systems
         private CheckBox isPhysicalCheckBox;
         private ComponentMapper<EntityInfo> infoMapper = null!;
         private ComponentMapper<Physical> physicalMapper = null!;
+        private CheckBox isBronchCheckbox;
 
         public ControlSystem(SharedState sharedState, MouseListener mouseListener,
             Random random, GraphicsDeviceManager graphics, Sprites sprites) : base(Aspect.All(typeof(Transform2),
@@ -100,9 +101,35 @@ namespace EcsFun.Systems
             };
             grid.Widgets.Add(isPhysicalCheckBox);
 
+            grid.Widgets.Add(new Label {
+                Text = "IsBronch",
+                GridRow = 2,
+                GridColumn = 0,
+            });
+            isBronchCheckbox = new CheckBox {
+                GridRow = 2,
+                GridColumn = 1
+            };
+            isBronchCheckbox.Click += (sender, args) => {
+                if (sender is CheckBox checkBox)
+                    ToggleSprite(checkBox.IsPressed);
+                skipNextMouseClicked = true;
+            };
+            grid.Widgets.Add(isBronchCheckbox);
+
             stack.Widgets.Add(grid);
 
             Desktop.Root = stack;
+        }
+
+        private void ToggleSprite(bool checkBoxIsPressed)
+        {
+            if (sharedState.SelectedEntity != null) {
+                var entity = GetEntity(sharedState.SelectedEntity.Value);
+                if (entity != null) {
+                    entity.Get<EntityInfo>().Sprite = checkBoxIsPressed ? SpriteType.Bronch : SpriteType.Anki;
+                }
+            }
         }
 
         private void TogglePhysical(bool isPhysical)
@@ -187,6 +214,7 @@ namespace EcsFun.Systems
             } else {
                 isPlayerCheckBox.IsPressed = playerMapper.Has(selectedentity.Value);
                 isPhysicalCheckBox.IsPressed = physicalMapper.Has(selectedentity.Value);
+                isBronchCheckbox.IsPressed = infoMapper.Get(selectedentity.Value).Sprite == SpriteType.Bronch;
                 grid.Visible = true;
             }
         }
